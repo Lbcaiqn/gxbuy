@@ -1,15 +1,12 @@
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { getBaseCategoryList } from '@/api/index';
 import { throttle } from '@/tools/lodash'
 
-const route = useRoute();
+const route = useRoute(), router = useRouter();
 
-let baseCategoryList: any = (await getBaseCategoryList()).data.data;
-console.log(baseCategoryList);
-
-let show = ref<boolean>(true);
+let show = ref<boolean>(route.path === '/Home' ? true : false);
 let currentIndex = ref<number>(-1);
 
 const enterHandler = throttle((index: number) => {
@@ -20,18 +17,37 @@ function leaveHandler() {
   if (route.path != '/Home') show.value = false;
 }
 
-function goSearch(e: any) {
-  console.log(e.target)
+function toSearch(e: any) {
+  let { categoryname, category1id, category2id, category3id } = e.target.dataset;
+  let data: {
+    categoryname?: string | undefined,
+    category1id?: string | undefined,
+    category2id?: string | undefined,
+    category3id?: string | undefined
+  } = {};
+
+  if (!categoryname) return;
+  data.categoryname = categoryname;
+
+  if (category1id) data.category1id = category1id;
+  else if (category2id) data.category2id = category2id;
+  else if (category3id) data.category3id = category3id;
+  console.log(data)
+  router.push({
+    path: '/Search',
+    query: data
+  });
 }
 function changeShow() {
   if (route.path != '/Home') show.value = true;
 }
+let baseCategoryList: any = (await getBaseCategoryList()).data.data;
 </script>
 
 <template>
   <div class="type-nav">
     <div class="container">
-      <div @mouseleave="leaveHandler" @click="goSearch">
+      <div @mouseleave="leaveHandler" @click="toSearch">
         <h2 class="all" @mouseenter="changeShow">全部商品分类</h2>
         <transition name="sort">
           <div class="sort" v-show="show">
@@ -108,7 +124,8 @@ function changeShow() {
     }
 
     .sort {
-      border: 10px solid #000;
+      // overflow: hidden;
+
       position: absolute;
       left: 0;
       top: 25px;
@@ -119,6 +136,9 @@ function changeShow() {
       z-index: 999;
 
       .all-sort-list2 {
+
+
+
         .item {
           h3 {
             line-height: 30px;
@@ -204,18 +224,16 @@ function changeShow() {
 
     /*过渡动画:商品分类 进入阶段*/
     .sort-enter-from {
-      // height: 0px;
       opacity: 0;
+
     }
 
     .sort-enter-active {
-      transition: all 2s;
+      transition: all 0.35s;
     }
 
     .sort-enter-to {
       opacity: 1;
-      // height: 461px;
-
     }
   }
 }

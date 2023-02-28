@@ -1,7 +1,7 @@
 import axios,{AxiosInstance,InternalAxiosRequestConfig,AxiosResponse} from 'axios'
 
 let instance: AxiosInstance = axios.create({
-  baseURL: '/api',
+  baseURL: '/mock',
   timeout: 1000 * 5
 })
 

@@ -9,10 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/mockjs": "^1.0.7",
+    "@types/swiper": "^6.0.0",
     "axios": "^1.3.3",
     "less-loader": "^11.1.0",
+    "mockjs": "^1.1.0",
     "normalize.css": "^8.0.1",
     "pinia": "^2.0.30",
+    "swiper": "^9.0.5",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
