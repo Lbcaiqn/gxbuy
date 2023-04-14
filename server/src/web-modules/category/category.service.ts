@@ -15,6 +15,5 @@ export class CategoryService {
   async getCategory() {
     const cat = await this.CategoryRepository.find();
     return toThree(cat, 0, 2);
-    // return 123;
   }
 }
