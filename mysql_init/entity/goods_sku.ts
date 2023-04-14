@@ -2,9 +2,11 @@ import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class GoodsSku {
-
   @PrimaryGeneratedColumn({ type: "bigint", unsigned: true })
-  _id: number;
+  _id: bigint;
+
+  @Column({ type: "bigint", unsigned: true, nullable: false })
+  goods_spu_id: bigint;
 
   @Column({ type: "varchar", length: 100, nullable: false })
   goods_sku_name: string;
@@ -26,10 +28,10 @@ export class GoodsSku {
 
   @Column({ type: "int", unsigned: true, nullable: false, default: 0 })
   goods_sku_stock: number;
-  
-  @Column({type: 'json', nullable: true})
-  sku_sales_attrs: JSON
-  
+
+  @Column({ type: "json", nullable: true })
+  sku_sales_attrs: JSON;
+
   @Column({ type: "smallint", unsigned: true, nullable: false })
   cid: number;
 
@@ -50,6 +52,5 @@ export class GoodsSku {
   add_time: Date;
 
   @Column({ type: "bigint", unsigned: true, nullable: false })
-  shop_id: number;
-
+  shop_id: bigint;
 }
