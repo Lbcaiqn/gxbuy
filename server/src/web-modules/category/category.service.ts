@@ -12,7 +12,7 @@ export class CategoryService {
     @InjectRepository(Attribute) private readonly AttributeRepository: Repository<Attribute>
   ) {}
 
-  async getCategory() {
+  async getCategoryList() {
     const cat = await this.CategoryRepository.find();
     return toThree(cat, 0, 2);
     // return 123;

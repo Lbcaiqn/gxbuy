@@ -1,34 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { GoodsService } from './goods.service';
-import { CreateGoodDto } from './dto/create-good.dto';
-import { UpdateGoodDto } from './dto/update-good.dto';
+import { SearchGoodDto } from './dto/search-goods.dto';
+import { ApiTags, ApiOperation, ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
 
-@Controller('goods')
+@Controller({
+  path: 'goods',
+  version: '1',
+})
+@ApiTags('商品相关接口')
 export class GoodsController {
   constructor(private readonly goodsService: GoodsService) {}
 
-  @Post()
-  create(@Body() createGoodDto: CreateGoodDto) {
-    return this.goodsService.create(createGoodDto);
+  @Post('/search')
+  @ApiOperation({ summary: '搜索商品', description: '搜索商品' })
+  @ApiResponse({ status: 403, description: '参数错误' })
+  searchGoods(@Body() body: SearchGoodDto) {
+    return this.goodsService.searchGoods(body);
   }
 
-  @Get()
-  findAll() {
-    return this.goodsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.goodsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGoodDto: UpdateGoodDto) {
-    return this.goodsService.update(+id, updateGoodDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.goodsService.remove(+id);
+  @Get('detail/:id')
+  getGoodsDetail() {
+    return this.goodsService.getGoodsDetail();
   }
 }
