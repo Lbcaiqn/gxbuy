@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { GoodsModule } from './web-modules/goods/goods.module';
-import { UserModule } from './web-modules/user/user.module';
-import { HomeModule } from './web-modules/home/home.module';
-import { ShopcartModule } from './web-modules/shopcart/shopcart.module';
-import { CategoryModule } from './web-modules/category/category.module';
+import { GoodsModule } from './modules/goods/goods.module';
+import { UserModule } from './modules/user/user.module';
+import { HomeModule } from './modules/home/home.module';
+import { ShopcartModule } from './modules/shopcart/shopcart.module';
+import { CategoryModule } from './modules/category/category.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({

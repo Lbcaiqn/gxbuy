@@ -23,7 +23,7 @@ async function bootstrap() {
   // 接口文档
   const options = new DocumentBuilder()
     .addBearerAuth()
-    .setTitle('接口文档')
+    .setTitle('Web接口文档')
     .setDescription('描述')
     .setVersion('1')
     .build();
