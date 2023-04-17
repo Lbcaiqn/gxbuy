@@ -1,18 +1,16 @@
-// npm install -g typescript ts-node
-
 import * as fs from "fs";
 import { createConnection, getRepository } from "typeorm";
-import { Shop } from "./entity/shop";
-import { GoodsSpu } from "./entity/goods_spu";
-import { GoodsSku } from "./entity/goods_sku";
-import { GoodsBannerImg } from "./entity/goods_banner_img";
-import { GoodsDetailImg } from "./entity/goods_detail_img";
-import { GoodsAttribute } from "./entity/goods_attribute";
-import { Attribute } from "./entity/attribute";
-import { Category } from "./entity/category";
+import { Shop } from "./entity/shop.entity";
+import { GoodsSpu } from "./entity/goods_spu.entity";
+import { GoodsSku } from "./entity/goods_sku.entity";
+import { GoodsBannerImg } from "./entity/goods_banner_img.entity";
+import { GoodsDetailImg } from "./entity/goods_detail_img.entity";
+import { GoodsAttribute } from "./entity/goods_attribute.entity";
+import { Attribute } from "./entity/attribute.entity";
+import { Category } from "./entity/category.entity";
 
 const url = {
-  shop: './data/shop.json',
+  shop: "./data/shop.json",
   goods_spu: "./data/goods_spu.json",
   goods_sku: "./data/goods_sku.json",
   goods_banner_img: "./data/goods_banner_img.json",
@@ -38,10 +36,10 @@ let total = 8;
   });
 
   console.log(`进度：( ${tableCnt} / ${total} )`);
-  
+
   const shopJson = fs.readFileSync(url.shop);
   const shopData = JSON.parse(shopJson.toString());
-  // await getRepository(Shop).insert(shopData);
+  await getRepository(Shop).insert(shopData);
   console.log(`进度：( ${++tableCnt} / ${total} )`);
 
   const goodsSpuJson = fs.readFileSync(url.goods_spu);
