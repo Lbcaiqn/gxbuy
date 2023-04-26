@@ -1,27 +1,67 @@
 import * as fs from "fs";
 import { createConnection, getRepository } from "typeorm";
+import { HomeBanner } from "./entity/home_banner.entity";
+import { HomeRecommend } from "./entity/home_recommend.entity";
 import { Shop } from "./entity/shop.entity";
+import { ShopManager } from "./entity/shop_manager.entity";
+import { ShopManagerRole } from "./entity/shop_manager_role.entity";
+import { SmMtmSmr } from "./entity/sm_mtm_smr.entity";
+import { User } from "./entity/user.entity";
+import { UserFavorite } from "./entity/user_favorite.entity";
+import { UserBrowseHistory } from "./entity/user_browse_history.entity";
+import { UserSearchHistory } from "./entity/user_search_history.entity";
+import { UserFollow } from "./entity/user_follow.entity";
 import { GoodsSpu } from "./entity/goods_spu.entity";
 import { GoodsSku } from "./entity/goods_sku.entity";
-import { GoodsBannerImg } from "./entity/goods_banner_img.entity";
-import { GoodsDetailImg } from "./entity/goods_detail_img.entity";
+import { GoodsImg } from "./entity/goods_img.entity";
 import { GoodsAttribute } from "./entity/goods_attribute.entity";
 import { Attribute } from "./entity/attribute.entity";
 import { Category } from "./entity/category.entity";
-
-const url = {
-  shop: "./data/shop.json",
-  goods_spu: "./data/goods_spu.json",
-  goods_sku: "./data/goods_sku.json",
-  goods_banner_img: "./data/goods_banner_img.json",
-  goods_detail_img: "./data/goods_detail_img.json",
-  goods_attribute: "./data/goods_attribute.json",
-  attribute: "./data/attribute.json",
-  category: "./data/category.json",
-};
+import { Shopcart } from "./entity/shopcart.entity";
+import { OrderInformation } from "./entity/order_information.entity";
+import { OrderItem } from "./entity/order_item.entity";
 
 let tableCnt = 0;
-let total = 8;
+let total = 29;
+
+const entity = [
+  { type: HomeBanner, url: "./data/home_banner.json" },
+  { type: HomeRecommend, url: "./data/home_recommend.json" },
+
+  // { type: Shop, url: "./data/shop.json" },
+  // { type: ShopManager, url: "./data/shop_manager.json" },
+  // { type: ShopManagerRole, url: "./data/shop_manager_role.json" },
+  // { type: SmMtmSmr, url: "./data/sm_mtm_smr.json" },
+
+  // { type: User, url: "./data/user.json" },
+  // { type: UserFavorite, url: "./data/user_favorite.json" },
+  // { type: UserFollow, url: "./data/user_follow.json" },
+  // { type: UserBrowseHistory, url: "./data/user_browse_history.json" },
+  // { type: UserSearchHistory, url: "./data/user_search_history.json" },
+
+  // { type: GoodsSpu, url: "./data/goods_spu.json" },
+  // { type: GoodsSku, url: "./data/goods_sku.json" },
+  // { type: GoodsImg, url: "./data/goods_img.json" },
+  // { type: GoodsAttribute, url: "./data/goods_attribute.json" },
+
+  // { type: Attribute, url: "./data/attribute.json" },
+  // { type: Category, url: "./data/category.json" },
+
+  // { type: Shopcart, url: "./data/shopcart.json" },
+
+  // { type: OrderInformation, url: "./data/order_information.json" },
+  // { type: OrderItem, url: "./data/order_item/1.json" },
+  // { type: OrderItem, url: "./data/order_item/2.json" },
+  // { type: OrderItem, url: "./data/order_item/3.json" },
+  // { type: OrderItem, url: "./data/order_item/4.json" },
+  // { type: OrderItem, url: "./data/order_item/5.json" },
+  // { type: OrderItem, url: "./data/order_item/6.json" },
+  // { type: OrderItem, url: "./data/order_item/7.json" },
+  // { type: OrderItem, url: "./data/order_item/8.json" },
+  // { type: OrderItem, url: "./data/order_item/9.json" },
+  // { type: OrderItem, url: "./data/order_item/10.json" },
+  // { type: OrderItem, url: "./data/order_item/11.json" },
+];
 
 (async () => {
   const connection = await createConnection({
@@ -37,54 +77,21 @@ let total = 8;
 
   console.log(`进度：( ${tableCnt} / ${total} )`);
 
-  const shopJson = fs.readFileSync(url.shop);
-  const shopData = JSON.parse(shopJson.toString());
-  await getRepository(Shop).insert(shopData);
-  console.log(`进度：( ${++tableCnt} / ${total} )`);
+  for (let e of entity) {
+    const data = JSON.parse(fs.readFileSync(e.url).toString());
+    let chunk: any[] = [];
+    let cnt = 0;
 
-  const goodsSpuJson = fs.readFileSync(url.goods_spu);
-  const goodsSpuData = JSON.parse(goodsSpuJson.toString());
-  await getRepository(GoodsSpu).insert(goodsSpuData);
-  console.log(`进度：( ${++tableCnt} / ${total} )`);
-
-  const goodsSkuJson = fs.readFileSync(url.goods_sku);
-  const goodsSkuData = JSON.parse(goodsSkuJson.toString());
-  await getRepository(GoodsSku).insert(goodsSkuData);
-  console.log(`进度：( ${++tableCnt} / ${total} )`);
-
-  const goodsBannerImgJson = fs.readFileSync(url.goods_banner_img);
-  const goodsBannerImgData = JSON.parse(goodsBannerImgJson.toString());
-  await getRepository(GoodsBannerImg).insert(goodsBannerImgData);
-  console.log(`进度：( ${++tableCnt} / ${total} )`);
-
-  const goodsDetailImgJson = fs.readFileSync(url.goods_detail_img);
-  const goodsDetailImgData = JSON.parse(goodsDetailImgJson.toString());
-  let chunk: GoodsDetailImg[] = [];
-  let cnt = 0;
-  for (let i of goodsDetailImgData) {
-    chunk.push(i);
-    cnt++;
-    if (cnt % 200000 == 0 || cnt >= goodsDetailImgData.length) {
-      await getRepository(GoodsDetailImg).insert(chunk);
-      chunk = [];
+    for (let i of data) {
+      chunk.push(i);
+      cnt++;
+      if (cnt % 50000 == 0 || cnt >= data.length) {
+        await getRepository(e.type).save(chunk);
+        chunk = [];
+      }
     }
+    console.log(`进度：( ${++tableCnt} / ${total} )`);
   }
-  console.log(`进度：( ${++tableCnt} / ${total} )`);
-
-  const goodsAttributeJson = fs.readFileSync(url.goods_attribute);
-  const goodsAttributeData = JSON.parse(goodsAttributeJson.toString());
-  await getRepository(GoodsAttribute).insert(goodsAttributeData);
-  console.log(`进度：( ${++tableCnt} / ${total} )`);
-
-  const attributeJson = fs.readFileSync(url.attribute);
-  const attributeData = JSON.parse(attributeJson.toString());
-  await getRepository(Attribute).insert(attributeData);
-  console.log(`进度：( ${++tableCnt} / ${total} )`);
-
-  const categoryJson = fs.readFileSync(url.category);
-  const categoryData = JSON.parse(categoryJson.toString());
-  await getRepository(Category).insert(categoryData);
-  console.log(`进度：( ${++tableCnt} / ${total} )`);
 
   console.log("数据库初始化完成");
 

@@ -1,12 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, Index } from "typeorm";
 
 @Entity()
 export class GoodsSku {
   @PrimaryGeneratedColumn({ type: "bigint", unsigned: true })
   _id: string;
-
-  @Column({ type: "bigint", unsigned: true, nullable: false })
-  goods_spu_id: string;
 
   @Column({ type: "varchar", length: 100, nullable: false })
   goods_sku_name: string;
@@ -32,16 +29,20 @@ export class GoodsSku {
   @Column({ type: "json", nullable: true })
   sku_sales_attrs: JSON;
 
-  @Column({ type: "smallint", unsigned: true, nullable: false })
+  @Index()
+  @Column({ type: "smallint", unsigned: true })
   cid: number;
 
-  @Column({ type: "smallint", unsigned: true, nullable: false })
+  @Index()
+  @Column({ type: "smallint", unsigned: true })
   c1id: number;
 
-  @Column({ type: "smallint", unsigned: true, nullable: false })
+  @Index()
+  @Column({ type: "smallint", unsigned: true })
   c2id: number;
 
-  @Column({ type: "smallint", unsigned: true, nullable: false })
+  @Index()
+  @Column({ type: "smallint", unsigned: true })
   c3id: number;
 
   @Column({
@@ -51,6 +52,11 @@ export class GoodsSku {
   })
   add_time: Date;
 
-  @Column({ type: "bigint", unsigned: true, nullable: false })
+  @Index()
+  @Column({ type: "bigint", unsigned: true })
+  goods_spu_id: string;
+
+  @Index()
+  @Column({ type: "bigint", unsigned: true })
   shop_id: string;
 }

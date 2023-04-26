@@ -5,9 +5,6 @@ export class Category {
   @PrimaryGeneratedColumn({ type: "smallint", unsigned: true })
   _id: number;
 
-  @Column({ type: "smallint", unsigned: true, nullable: false })
-  cat_pid: number;
-
   @Column({ type: "tinyint", unsigned: true, nullable: false })
   cat_level: number;
 
@@ -16,4 +13,14 @@ export class Category {
 
   @Column({ type: "varchar", length: 250, nullable: true })
   cat_icon: string;
+
+  @Column({ type: "smallint", unsigned: true, nullable: true })
+  cat_pid: number;
+
+  @Column({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP",
+    nullable: false,
+  })
+  add_time: Date;
 }

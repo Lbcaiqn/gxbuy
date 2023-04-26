@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, Index } from "typeorm";
 
 @Entity()
 export class GoodsSpu {
@@ -29,16 +29,20 @@ export class GoodsSpu {
   @Column({ type: "json", nullable: true })
   spu_sales_attrs: JSON;
 
-  @Column({ type: "smallint", unsigned: true, nullable: false })
+  @Index()
+  @Column({ type: "smallint", unsigned: true })
   cid: number;
 
-  @Column({ type: "smallint", unsigned: true, nullable: false })
+  @Index()
+  @Column({ type: "smallint", unsigned: true })
   c1id: number;
 
-  @Column({ type: "smallint", unsigned: true, nullable: false })
+  @Index()
+  @Column({ type: "smallint", unsigned: true })
   c2id: number;
 
-  @Column({ type: "smallint", unsigned: true, nullable: false })
+  @Index()
+  @Column({ type: "smallint", unsigned: true })
   c3id: number;
 
   @Column({
@@ -48,6 +52,7 @@ export class GoodsSpu {
   })
   add_time: Date;
 
-  @Column({ type: "bigint", unsigned: true, nullable: false })
+  @Index()
+  @Column({ type: "bigint", unsigned: true })
   shop_id: string;
 }
