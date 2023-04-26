@@ -5,6 +5,9 @@ import { HomeModule } from './modules/home/home.module';
 import { ShopcartModule } from './modules/shopcart/shopcart.module';
 import { CategoryModule } from './modules/category/category.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ShopModule } from './modules/shop/shop.module';
+import { AaaModule } from './modules/aaa/aaa/aaa.module';
+import { OrderModule } from './modules/order/order.module';
 
 @Module({
   imports: [
@@ -25,6 +28,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       retryAttempts: 10,
       autoLoadEntities: true,
     }),
+    ShopModule,
+    AaaModule,
+    OrderModule,
   ],
 })
 export class AppModule {}

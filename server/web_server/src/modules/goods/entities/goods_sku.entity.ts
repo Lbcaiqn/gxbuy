@@ -1,7 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { Shop } from './shop.entity';
+import { Entity, Column, PrimaryGeneratedColumn, Index, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { Category } from '@/modules/category/entities/category.entity';
 import { GoodsSpu } from './goods_spu.entity';
+import { Shop } from '@/modules/shop/entities/shop.entity';
+import { Shopcart } from '@/modules/shopcart/entities/shopcart.entity';
+import { OrderItem } from '@/modules/order/entities/order_item.entity';
 
 @Entity()
 export class GoodsSku {
@@ -39,27 +41,39 @@ export class GoodsSku {
   })
   add_time: Date;
 
+  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'cid' })
   cid_msg: Category;
 
+  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'c1id' })
   c1id_msg: Category;
 
+  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'c2id' })
   c2id_msg: Category;
 
+  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'c3id' })
   c3id_msg: Category;
 
+  @Index()
   @ManyToOne(() => Shop, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'shop_id' })
   shop: Shop;
 
+  @Index()
   @ManyToOne(() => GoodsSpu, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'goods_spu_id' })
   goods_spu: GoodsSpu;
+
+  @OneToMany(() => Shopcart, sc => sc.goods_sku)
+  shopcart: Shopcart[];
+
+  @OneToMany(() => OrderItem, oitem => oitem.goods_sku)
+  order_item: OrderItem[];
 }

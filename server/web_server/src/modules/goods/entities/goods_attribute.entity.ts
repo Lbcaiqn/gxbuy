@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
-import { Attribute } from './attribute.entity';
+import { Entity, Column, PrimaryGeneratedColumn, Index, JoinColumn, ManyToOne } from 'typeorm';
+import { Attribute } from '@/modules/category/entities/attribute.entity';
 import { GoodsSpu } from './goods_spu.entity';
 
 @Entity()
@@ -10,10 +10,19 @@ export class GoodsAttribute {
   @Column({ type: 'varchar', length: 150, nullable: true })
   goods_instance_value: string;
 
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    nullable: false,
+  })
+  add_time: Date;
+
+  @Index()
   @ManyToOne(() => Attribute, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'attr_id' })
   attribute: Attribute;
 
+  @Index()
   @ManyToOne(() => GoodsSpu, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'goods_spu_id' })
   goods_spu: GoodsSpu;

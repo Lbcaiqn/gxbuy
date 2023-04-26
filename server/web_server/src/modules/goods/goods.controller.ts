@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Req } from '@nestjs/common';
 import { GoodsService } from './goods.service';
 import { ApiTags, ApiOperation, ApiParam, ApiQuery } from '@nestjs/swagger';
 
@@ -21,8 +21,8 @@ export class GoodsController {
   @ApiQuery({ name: 'c3id', type: Number, description: '第三级分类id', required: true })
   @ApiQuery({ name: 'pageSize', type: Number, description: '每页数量', required: true })
   @ApiQuery({ name: 'page', type: Number, description: '页码', required: true })
-  searchGoods(@Query() query) {
-    return this.goodsService.searchGoods(query);
+  searchGoods(@Req() req) {
+    return this.goodsService.searchGoods(req);
   }
 
   @Get('detail/:id')
@@ -31,7 +31,19 @@ export class GoodsController {
     description: '获取商品详情信息，因为后端的id是bigint类型，需要借助字符串处理',
   })
   @ApiParam({ name: 'id', type: String, description: '商品id', required: true })
-  getGoodsDetail(@Param('id') id) {
-    return this.goodsService.getGoodsDetail(id);
+  getGoodsDetail(@Req() req, @Param('id') id) {
+    return this.goodsService.getGoodsDetail(req, id);
+  }
+
+  @Get('/getGoodsByFeature')
+  @ApiOperation({
+    summary: '获取某种特征的商品列表',
+    description: '获取热门、新品、流行的商品列表',
+  })
+  @ApiQuery({ name: 'feature', type: String, description: '商品特征', required: true })
+  @ApiQuery({ name: 'pageSize', type: Number, description: '每页数量', required: true })
+  @ApiQuery({ name: 'page', type: Number, description: '页码', required: true })
+  getGoodsByFeature(@Req() req) {
+    return this.goodsService.getGoodsByFeature(req);
   }
 }

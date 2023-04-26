@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { VersioningType } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cors from 'cors';
+import * as session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,6 +18,18 @@ async function bootstrap() {
     cors({
       origin: true,
       credentials: true,
+    })
+  );
+
+  // session，实现验证码需要用，登录则用jwt
+  app.use(
+    session({
+      secret: 'asjlfhuig4145646g5sr4g65',
+      rolling: true, //true每次请求后设置session会重新计时session过期时间
+      name: 'cookiename', //session的name
+      cookie: {
+        maxAge: 3 * 60 * 1000, //过期时间，单位毫秒，如果是负数或null则是一次性的
+      },
     })
   );
 

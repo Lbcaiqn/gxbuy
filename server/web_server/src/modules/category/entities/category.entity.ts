@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, JoinColumn } from 'typeorm';
+import { Attribute } from './attribute.entity';
 import { GoodsSpu } from '@/modules/goods/entities/goods_spu.entity';
 import { GoodsSku } from '@/modules/goods/entities/goods_sku.entity';
-import { Attribute } from '@/modules/goods/entities/attribute.entity';
 
 @Entity()
 export class Category {
@@ -16,6 +16,13 @@ export class Category {
 
   @Column({ type: 'varchar', length: 250, nullable: true })
   cat_icon: string;
+
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    nullable: false,
+  })
+  add_time: Date;
 
   @OneToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'cat_pid' })

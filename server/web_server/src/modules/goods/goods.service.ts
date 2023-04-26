@@ -1,48 +1,123 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Request } from 'express';
 import { Repository, Like } from 'typeorm';
 import { GoodsSpu } from './entities/goods_spu.entity';
+import { User } from '../user/entities/user.entity';
+import { UserFavorite } from '../user/entities/user_favorite.entity';
+import { UserFollow } from '../user/entities/user_follow.entity';
+import { UserBrowseHistory } from '../user/entities/user_browse_history.entity';
+import { UserSearchHistory } from '../user/entities/user_search_history.entity';
+import { varify } from 'jsonwebtoken';
+import { SECRCT } from '@/common/secrct';
 
 @Injectable()
 export class GoodsService {
-  constructor(@InjectRepository(GoodsSpu) private readonly GoodsSpuRepository: Repository<GoodsSpu>) {}
+  constructor(
+    @InjectRepository(GoodsSpu) private readonly goodsSpuRepository: Repository<GoodsSpu>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(UserFavorite) private readonly userFavoriteRepository: Repository<UserFavorite>,
+    @InjectRepository(UserFollow) private readonly userFollowRepository: Repository<UserFollow>,
+    @InjectRepository(UserBrowseHistory) private readonly userBrowseHistoryRepository: Repository<UserBrowseHistory>,
+    @InjectRepository(UserSearchHistory) private readonly userSearchHistoryRepository: Repository<UserSearchHistory>
+  ) {}
 
-  async searchGoods(query: {
-    keyword: string;
-    c1id: number;
-    c2id: number;
-    c3id: number;
-    pageSize: number;
-    page: number;
-  }) {
-    let where: any = {};
+  async searchGoods(req: Request) {
+    const { keyword, c1id, c2id, c3id, pageSize, page } = req.query as any;
 
-    if (!query?.keyword) where.goods_spu_name = Like(`%${query.keyword}%`);
-    if (!query?.c1id) where.c1id = query.c1id;
-    if (!query?.c2id) where.c2id = query.c2id;
-    if (!query?.c3id) where.c3id = query.c3id;
+    const where: any = {};
 
-    const data = await this.GoodsSpuRepository.find({
+    if (keyword) where.goods_spu_name = Like(`%${keyword}%`);
+    if (c1id) where.c1id = c1id;
+    if (c2id) where.c2id = c2id;
+    if (c3id) where.c3id = c3id;
+
+    const data = await this.goodsSpuRepository.find({
       where,
-      skip: query?.page - 1 || 0,
-      take: query.pageSize,
+      skip: (page - 1) * pageSize || 0,
+      take: pageSize || 30,
     });
+
+    // 如果目前是登录状态，就异步保存搜索记录
+    let user_id: string | null = null;
+    try {
+      user_id = varify(req.headers.authorization, SECRCT).user_id;
+    } catch (err) {
+      user_id = null;
+    }
+    if (!user_id) {
+      this.userRepository.findOne({ where: { _id: user_id } }).then(user => {
+        if (!user) {
+          const userSearchHistory = new UserSearchHistory();
+          userSearchHistory.keyword = keyword;
+          userSearchHistory.user = user;
+          this.userSearchHistoryRepository.save(userSearchHistory);
+        }
+      });
+    }
 
     return data;
   }
 
-  async getGoodsDetail(id: string) {
-    const data = await this.GoodsSpuRepository.findOne({
+  async getGoodsDetail(req: Request, id: string) {
+    const data = await this.goodsSpuRepository.findOne({
       where: { _id: id },
-      relations: [
-        'shop',
-        'goods_sku',
-        'goods_banner_img',
-        'goods_detail_img',
-        'goods_attribute',
-        'goods_attribute.attribute',
-      ],
+      relations: ['shop', 'goods_sku', 'goods_img', 'goods_attribute', 'goods_attribute.attribute'],
     });
+
+    if (!data) return '商品不存在';
+
+    const resData = { ...data, isFavorite: false, isFollow: false };
+
+    // 如果目前是登录状态，就查看是否是收藏的商品和关注的商家，并异步保存浏览记录
+    let user_id: string | null = null;
+    try {
+      user_id = varify(req.headers.authorization, SECRCT).user_id;
+    } catch (err) {
+      user_id = null;
+    }
+    if (!user_id) {
+      const user = await this.userRepository.findOne({ where: { _id: user_id } });
+      if (!user) {
+        const userFavorite = await this.userFavoriteRepository
+          .createQueryBuilder('user_favorite')
+          .where('user_id = :id', { id: user_id })
+          .andWhere('goods_spu_id = :id', { id: resData._id })
+          .getOne();
+        const userFollow = await this.userFollowRepository
+          .createQueryBuilder('user_follow')
+          .where('user_id = :id', { id: user_id })
+          .andWhere('shop_id = :id', { id: resData.shop._id })
+          .getOne();
+        if (userFavorite) resData.isFavorite = true;
+        if (userFollow) resData.isFollow = true;
+
+        const userBrowseHistory = new UserBrowseHistory();
+        userBrowseHistory.user = user;
+        userBrowseHistory.goods_spu = data;
+        this.userBrowseHistoryRepository.save(userBrowseHistory);
+      }
+    }
+
+    return resData;
+  }
+
+  async getGoodsByFeature(req: Request) {
+    const { feature, pageSize, page } = req.query as any;
+
+    if (!['hot', 'new', 'pop'].includes(feature)) return '参数错误';
+
+    const order: any = {};
+    if (feature === 'hot') order.goods_sku_total_sales = 'desc';
+    else if (feature === 'new') order.add_time = 'desc';
+    else if (feature === 'pop') order.goods_spu_total_favorite = 'desc';
+
+    const data = await this.goodsSpuRepository.find({
+      skip: (page - 1) * pageSize || 0,
+      take: pageSize || 30,
+      order,
+    });
+
     return data;
   }
 }

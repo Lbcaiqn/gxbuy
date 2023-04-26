@@ -1,11 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
-import { Shop } from './shop.entity';
+import { Entity, Column, PrimaryGeneratedColumn, Index, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { Category } from '@/modules/category/entities/category.entity';
 import { GoodsSku } from './goods_sku.entity';
-import { GoodsBannerImg } from './goods_banner_img.entity';
-import { GoodsDetailImg } from './goods_detail_img.entity';
+import { GoodsImg } from './goods_img.entity';
 import { GoodsAttribute } from './goods_attribute.entity';
-
+import { Shop } from '@/modules/shop/entities/shop.entity';
+import { Shopcart } from '@/modules/shopcart/entities/shopcart.entity';
+import { UserBrowseHistory } from '@/modules/user/entities/user_browse_history.entity';
+import { UserFavorite } from '@/modules/user/entities/user_favorite.entity';
+import { OrderItem } from '@/modules/order/entities/order_item.entity';
 @Entity()
 export class GoodsSpu {
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
@@ -32,6 +34,9 @@ export class GoodsSpu {
   @Column({ type: 'int', unsigned: true, nullable: false, default: 0 })
   goods_sku_total_stock: number;
 
+  @Column({ type: 'int', unsigned: true, nullable: false, default: 0 })
+  goods_spu_total_favorite: number;
+
   @Column({ type: 'json', nullable: true })
   spu_sales_attrs: JSON;
 
@@ -42,22 +47,27 @@ export class GoodsSpu {
   })
   add_time: Date;
 
+  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'cid' })
   cid_msg: Category;
 
+  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'c1id' })
   c1id_msg: Category;
 
+  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'c2id' })
   c2id_msg: Category;
 
+  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'c3id' })
   c3id_msg: Category;
 
+  @Index()
   @ManyToOne(() => Shop, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'shop_id' })
   shop: Shop;
@@ -65,12 +75,21 @@ export class GoodsSpu {
   @OneToMany(() => GoodsSku, gsku => gsku.goods_spu)
   goods_sku: GoodsSku[];
 
-  @OneToMany(() => GoodsBannerImg, gbanner => gbanner.goods_spu)
-  goods_banner_img: GoodsBannerImg[];
-
-  @OneToMany(() => GoodsDetailImg, gdetail => gdetail.goods_spu)
-  goods_detail_img: GoodsDetailImg[];
+  @OneToMany(() => GoodsImg, gi => gi.goods_spu)
+  goods_img: GoodsImg[];
 
   @OneToMany(() => GoodsAttribute, gattr => gattr.goods_spu)
   goods_attribute: GoodsAttribute[];
+
+  @OneToMany(() => Shopcart, sc => sc.goods_spu)
+  shopcart: Shopcart[];
+
+  @OneToMany(() => UserBrowseHistory, ubh => ubh.goods_spu)
+  user_browse_history: UserBrowseHistory[];
+
+  @OneToMany(() => UserFavorite, uf => uf.goods_spu)
+  user_favorite: UserFavorite[];
+
+  @OneToMany(() => OrderItem, oitem => oitem.goods_spu)
+  order_item: OrderItem[];
 }
