@@ -1,16 +1,12 @@
-<script setup lang='ts'>
-import 'normalize.css';
-import Header from '@/components/content/Header/Header.vue';
-import Footer from '@/components/content/Footer/Footer.vue';
-import aaa from "./1.vue"
-
+<script setup lang="ts">
+import PCHeader from './components/content/PCHeader.vue';
+import PCFooter from './components/content/PCFooter.vue';
 </script>
 
 <template>
-  <Header />
-  <router-view></router-view>
-  <Footer v-show="$route?.meta?.showFooter" />
-  <aaa />
+  <PCHeader />
+  <router-view />
+  <PCFooter />
 </template>
 
-<style lang='less'></style>
+<style lang="less"></style>
