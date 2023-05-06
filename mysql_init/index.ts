@@ -2,6 +2,7 @@ import * as fs from "fs";
 import { createConnection, getRepository } from "typeorm";
 import { HomeBanner } from "./entity/home_banner.entity";
 import { HomeRecommend } from "./entity/home_recommend.entity";
+import { HomeFloor } from "./entity/home_floor.entity";
 import { Shop } from "./entity/shop.entity";
 import { ShopManager } from "./entity/shop_manager.entity";
 import { ShopManagerRole } from "./entity/shop_manager_role.entity";
@@ -22,45 +23,46 @@ import { OrderInformation } from "./entity/order_information.entity";
 import { OrderItem } from "./entity/order_item.entity";
 
 let tableCnt = 0;
-let total = 29;
+let total = 31;
 
 const entity = [
   { type: HomeBanner, url: "./data/home_banner.json" },
   { type: HomeRecommend, url: "./data/home_recommend.json" },
+  { type: HomeFloor, url: "./data/home_floor.json" },
 
-  // { type: Shop, url: "./data/shop.json" },
-  // { type: ShopManager, url: "./data/shop_manager.json" },
-  // { type: ShopManagerRole, url: "./data/shop_manager_role.json" },
-  // { type: SmMtmSmr, url: "./data/sm_mtm_smr.json" },
+  { type: Shop, url: "./data/shop.json" },
+  { type: ShopManager, url: "./data/shop_manager.json" },
+  { type: ShopManagerRole, url: "./data/shop_manager_role.json" },
+  { type: SmMtmSmr, url: "./data/sm_mtm_smr.json" },
 
-  // { type: User, url: "./data/user.json" },
-  // { type: UserFavorite, url: "./data/user_favorite.json" },
-  // { type: UserFollow, url: "./data/user_follow.json" },
-  // { type: UserBrowseHistory, url: "./data/user_browse_history.json" },
-  // { type: UserSearchHistory, url: "./data/user_search_history.json" },
+  { type: User, url: "./data/user.json" },
+  { type: UserFavorite, url: "./data/user_favorite.json" },
+  { type: UserFollow, url: "./data/user_follow.json" },
+  { type: UserBrowseHistory, url: "./data/user_browse_history.json" },
+  { type: UserSearchHistory, url: "./data/user_search_history.json" },
 
-  // { type: GoodsSpu, url: "./data/goods_spu.json" },
-  // { type: GoodsSku, url: "./data/goods_sku.json" },
-  // { type: GoodsImg, url: "./data/goods_img.json" },
-  // { type: GoodsAttribute, url: "./data/goods_attribute.json" },
+  { type: GoodsSpu, url: "./data/goods_spu.json" },
+  { type: GoodsSku, url: "./data/goods_sku.json" },
+  { type: GoodsImg, url: "./data/goods_img.json" },
+  { type: GoodsAttribute, url: "./data/goods_attribute.json" },
 
-  // { type: Attribute, url: "./data/attribute.json" },
-  // { type: Category, url: "./data/category.json" },
+  { type: Attribute, url: "./data/attribute.json" },
+  { type: Category, url: "./data/category.json" },
 
-  // { type: Shopcart, url: "./data/shopcart.json" },
+  { type: Shopcart, url: "./data/shopcart.json" },
 
-  // { type: OrderInformation, url: "./data/order_information.json" },
-  // { type: OrderItem, url: "./data/order_item/1.json" },
-  // { type: OrderItem, url: "./data/order_item/2.json" },
-  // { type: OrderItem, url: "./data/order_item/3.json" },
-  // { type: OrderItem, url: "./data/order_item/4.json" },
-  // { type: OrderItem, url: "./data/order_item/5.json" },
-  // { type: OrderItem, url: "./data/order_item/6.json" },
-  // { type: OrderItem, url: "./data/order_item/7.json" },
-  // { type: OrderItem, url: "./data/order_item/8.json" },
-  // { type: OrderItem, url: "./data/order_item/9.json" },
-  // { type: OrderItem, url: "./data/order_item/10.json" },
-  // { type: OrderItem, url: "./data/order_item/11.json" },
+  { type: OrderInformation, url: "./data/order_information.json" },
+  { type: OrderItem, url: "./data/order_item/1.json" },
+  { type: OrderItem, url: "./data/order_item/2.json" },
+  { type: OrderItem, url: "./data/order_item/3.json" },
+  { type: OrderItem, url: "./data/order_item/4.json" },
+  { type: OrderItem, url: "./data/order_item/5.json" },
+  { type: OrderItem, url: "./data/order_item/6.json" },
+  { type: OrderItem, url: "./data/order_item/7.json" },
+  { type: OrderItem, url: "./data/order_item/8.json" },
+  { type: OrderItem, url: "./data/order_item/9.json" },
+  { type: OrderItem, url: "./data/order_item/10.json" },
+  { type: OrderItem, url: "./data/order_item/11.json" },
 ];
 
 (async () => {

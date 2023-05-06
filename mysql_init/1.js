@@ -1,8 +1,8 @@
 const fs = require("fs");
-const cheerio = require("cheerio");
-const axios = require("axios");
+// const cheerio = require("cheerio");
+// const axios = require("axios");
 const pw = "$2a$10$f0qTEykOESwXtP2PaSZTf.SAZ1.b.FT2eIxnHxwsyFNL54NsdDpkW";
-const Jimp = require("jimp");
+// const Jimp = require("jimp");
 
 function format(dateTime = new Date()) {
   const year = dateTime.getFullYear();
@@ -27,12 +27,11 @@ function format(dateTime = new Date()) {
   return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
-const baseURL = "https://api-hmugo-web.itheima.net";
+const g = JSON.parse(fs.readFileSync("./data/goods_spu.json"));
 
-const b = JSON.parse(fs.readFileSync("./data/home_banner.json"));
-const r = JSON.parse(fs.readFileSync("./data/home_recommend.json"));
+const a = g.filter((i) => i._id == 57241);
 
-console.log(r);
+console.log(a);
 // let o = [];
 // let oo = [];
 // let cnt = 1;

@@ -26,6 +26,9 @@ export class GoodsSpu {
   @Column({ type: "int", unsigned: true, nullable: false, default: 0 })
   goods_sku_total_stock: number;
 
+  @Column({ type: "int", unsigned: true, nullable: false, default: 0 })
+  goods_spu_total_favorite: number;
+
   @Column({ type: "json", nullable: true })
   spu_sales_attrs: JSON;
 
