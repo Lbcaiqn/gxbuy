@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
 export class HomeRecommend {
-  @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
-  _id: string;
+  @PrimaryGeneratedColumn({ type: 'tinyint', unsigned: true })
+  _id: number;
 
   @Column({ type: 'varchar', length: 20, nullable: false })
   name: string;
@@ -14,6 +14,13 @@ export class HomeRecommend {
   @Column({ type: 'varchar', length: 250, nullable: false })
   img: string;
 
-  @Column({ type: 'int', unsigned: true, nullable: true })
-  pid: string;
+  @Column({ type: 'tinyint', unsigned: true, nullable: true })
+  pid: number;
+
+  @ManyToOne(() => HomeRecommend, { createForeignKeyConstraints: false })
+  @JoinColumn({ name: 'pid' })
+  parent: HomeRecommend;
+
+  @OneToMany(() => HomeRecommend, hr => hr.parent)
+  children: HomeRecommend[];
 }

@@ -37,6 +37,9 @@ export class OrderInformation {
   })
   update_time: Date;
 
+  @Column({ type: 'bigint', unsigned: true, nullable: true })
+  user_id: string;
+
   @Index()
   @ManyToOne(() => User, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'user_id' })

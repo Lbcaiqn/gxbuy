@@ -20,6 +20,18 @@ export class Attribute {
   })
   add_time: Date;
 
+  @Column({ type: 'smallint', unsigned: true, nullable: true })
+  cid: number;
+
+  @Column({ type: 'smallint', unsigned: true, nullable: true })
+  c1id: number;
+
+  @Column({ type: 'smallint', unsigned: true, nullable: true })
+  c2id: number;
+
+  @Column({ type: 'smallint', unsigned: true, nullable: true })
+  c3id: number;
+
   @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'cid' })

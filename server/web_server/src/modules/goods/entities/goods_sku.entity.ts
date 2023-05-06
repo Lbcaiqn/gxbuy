@@ -41,6 +41,24 @@ export class GoodsSku {
   })
   add_time: Date;
 
+  @Column({ type: 'smallint', unsigned: true, nullable: true })
+  cid: number;
+
+  @Column({ type: 'smallint', unsigned: true, nullable: true })
+  c1id: number;
+
+  @Column({ type: 'smallint', unsigned: true, nullable: true })
+  c2id: number;
+
+  @Column({ type: 'smallint', unsigned: true, nullable: true })
+  c3id: number;
+
+  @Column({ type: 'bigint', unsigned: true, nullable: true })
+  shop_id: string;
+
+  @Column({ type: 'bigint', unsigned: true, nullable: true })
+  goods_spu_id: string;
+
   @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'cid' })

@@ -17,6 +17,12 @@ export class GoodsAttribute {
   })
   add_time: Date;
 
+  @Column({ type: 'bigint', unsigned: true, nullable: true })
+  attr_id: string;
+
+  @Column({ type: 'bigint', unsigned: true, nullable: true })
+  goods_spu_id: string;
+
   @Index()
   @ManyToOne(() => Attribute, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'attr_id' })

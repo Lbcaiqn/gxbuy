@@ -3,10 +3,12 @@ import { AppModule } from './app.module';
 import { VersioningType } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cors from 'cors';
+import { NestExpressApplication } from '@nestjs/platform-express/interfaces';
+import { join } from 'path';
 import * as session from 'express-session';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // 接口版本
   app.enableVersioning({
@@ -20,6 +22,9 @@ async function bootstrap() {
       credentials: true,
     })
   );
+
+  // 静态文件夹
+  app.useStaticAssets(join(__dirname, '../public'));
 
   // session，实现验证码需要用，登录则用jwt
   app.use(

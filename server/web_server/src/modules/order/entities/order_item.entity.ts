@@ -51,6 +51,21 @@ export class OrderItem {
   })
   update_time: Date;
 
+  @Column({ type: 'bigint', unsigned: true, nullable: true })
+  order_information_id: string;
+
+  @Column({ type: 'bigint', unsigned: true, nullable: true })
+  user_id: string;
+
+  @Column({ type: 'bigint', unsigned: true, nullable: true })
+  shop_id: string;
+
+  @Column({ type: 'bigint', unsigned: true, nullable: true })
+  goods_spu_id: string;
+
+  @Column({ type: 'bigint', unsigned: true, nullable: true })
+  goods_sku_id: string;
+
   @Index()
   @ManyToOne(() => OrderInformation, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'order_information_id' })

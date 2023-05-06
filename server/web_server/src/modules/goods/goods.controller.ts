@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Req } from '@nestjs/common';
 import { GoodsService } from './goods.service';
+import { VarifyParamsQuery } from '@/tools/varifyParamsQuery';
 import { ApiTags, ApiOperation, ApiParam, ApiQuery } from '@nestjs/swagger';
 
 @Controller({
@@ -22,6 +23,9 @@ export class GoodsController {
   @ApiQuery({ name: 'pageSize', type: Number, description: '每页数量', required: true })
   @ApiQuery({ name: 'page', type: Number, description: '页码', required: true })
   searchGoods(@Req() req) {
+    if (!VarifyParamsQuery.varifyPage(req.query.pageSize)) req.query.pageSize = 30;
+    if (!VarifyParamsQuery.varifyPage(req.query.page)) req.query.page = 1;
+
     return this.goodsService.searchGoods(req);
   }
 
@@ -30,9 +34,9 @@ export class GoodsController {
     summary: '获取商品详情信息',
     description: '获取商品详情信息，因为后端的id是bigint类型，需要借助字符串处理',
   })
-  @ApiParam({ name: 'id', type: String, description: '商品id', required: true })
+  @ApiParam({ name: '商品id', type: String, description: '商品id', required: true })
   getGoodsDetail(@Req() req, @Param('id') id) {
-    return this.goodsService.getGoodsDetail(req, id);
+    return this.goodsService.getGoodsDetail(id, req);
   }
 
   @Get('/getGoodsByFeature')
@@ -44,6 +48,40 @@ export class GoodsController {
   @ApiQuery({ name: 'pageSize', type: Number, description: '每页数量', required: true })
   @ApiQuery({ name: 'page', type: Number, description: '页码', required: true })
   getGoodsByFeature(@Req() req) {
+    if (!['hot', 'new', 'pop'].includes(req.query.feature)) req.query.feature = 'hot';
+    if (!VarifyParamsQuery.varifyPage(req.query.pageSize)) req.query.pageSize = 30;
+    if (!VarifyParamsQuery.varifyPage(req.query.page)) req.query.page = 1;
+
     return this.goodsService.getGoodsByFeature(req);
+  }
+
+  @Get('/getGoodsByShop/:id')
+  @ApiOperation({
+    summary: '获取商家的商品',
+    description: '获取商家的商品',
+  })
+  @ApiParam({ name: '商家id', type: String, description: '商家id', required: true })
+  @ApiQuery({ name: 'pageSize', type: Number, description: '每页数量', required: true })
+  @ApiQuery({ name: 'page', type: Number, description: '页码', required: true })
+  getGoodsByShop(@Param('id') id, @Req() req) {
+    if (!VarifyParamsQuery.varifyPage(req.query.pageSize)) req.query.pageSize = 30;
+    if (!VarifyParamsQuery.varifyPage(req.query.page)) req.query.page = 1;
+
+    return this.goodsService.getGoodsByShop(id, req);
+  }
+
+  @Get('/getGoodsComment/:id')
+  @ApiOperation({
+    summary: '获取商品评论',
+    description: '获取商品评论',
+  })
+  @ApiParam({ name: '商品id', type: String, description: '商品id', required: true })
+  @ApiQuery({ name: 'pageSize', type: Number, description: '每页数量', required: true })
+  @ApiQuery({ name: 'page', type: Number, description: '页码', required: true })
+  getGoodsComment(@Param('id') id, @Req() req) {
+    if (!VarifyParamsQuery.varifyPage(req.query.pageSize)) req.query.pageSize = 30;
+    if (!VarifyParamsQuery.varifyPage(req.query.page)) req.query.page = 1;
+
+    return this.goodsService.getGoodsComment(id, req);
   }
 }

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Attribute } from './attribute.entity';
 import { GoodsSpu } from '@/modules/goods/entities/goods_spu.entity';
 import { GoodsSku } from '@/modules/goods/entities/goods_sku.entity';
@@ -24,9 +24,15 @@ export class Category {
   })
   add_time: Date;
 
-  @OneToOne(() => Category, { createForeignKeyConstraints: false })
+  @Column({ type: 'smallint', unsigned: true, nullable: true })
+  cat_pid: number;
+
+  @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'cat_pid' })
   parent: Category;
+
+  @OneToMany(() => Category, cat => cat.parent)
+  children: Category[];
 
   @OneToMany(() => GoodsSpu, gspu => gspu.cid_msg)
   goods_spu_is_cid: GoodsSpu[];

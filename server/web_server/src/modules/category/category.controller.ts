@@ -10,9 +10,9 @@ import { ApiTags, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiBearerAuth }
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Get('getCategoryList')
+  @Get('getCategoryData')
   @ApiOperation({ summary: '获取分类列表', description: '三级分类信息' })
-  getCategoryList() {
-    return this.categoryService.getCategoryList();
+  getCategoryData() {
+    return this.categoryService.getCategoryData();
   }
 }

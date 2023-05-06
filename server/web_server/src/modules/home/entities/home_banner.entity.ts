@@ -7,8 +7,8 @@ enum BannerType {
 
 @Entity()
 export class HomeBanner {
-  @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
-  _id: string;
+  @PrimaryGeneratedColumn({ type: 'tinyint', unsigned: true })
+  _id: number;
 
   @Column({ type: 'varchar', length: 250, nullable: false })
   img: string;
