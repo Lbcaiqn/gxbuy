@@ -23,7 +23,7 @@ import { OrderInformation } from "./entity/order_information.entity";
 import { OrderItem } from "./entity/order_item.entity";
 
 let tableCnt = 0;
-let total = 31;
+let total = 32;
 
 const entity = [
   { type: HomeBanner, url: "./data/home_banner.json" },
@@ -51,7 +51,9 @@ const entity = [
 
   { type: Shopcart, url: "./data/shopcart.json" },
 
-  { type: OrderInformation, url: "./data/order_information.json" },
+  { type: OrderInformation, url: "./data/order_information/1.json" },
+  { type: OrderInformation, url: "./data/order_information/2.json" },
+
   { type: OrderItem, url: "./data/order_item/1.json" },
   { type: OrderItem, url: "./data/order_item/2.json" },
   { type: OrderItem, url: "./data/order_item/3.json" },

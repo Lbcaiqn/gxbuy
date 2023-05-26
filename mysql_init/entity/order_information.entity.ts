@@ -1,10 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index } from "typeorm";
 
 enum StateType {
-  WAITPAID = "wait-paid",
-  WAITSHIPPED = "wait-shipped",
-  WAITRECEIVE = "wait-receive",
-  WAITCOMMENT = "wait-comment",
+  WAITPAID = "wait_paid",
+  WAITSHIPPED = "wait_shipped",
+  WAITRECEIVE = "wait_receive",
+  WAITCOMMENT = "wait_comment",
   FINISH = "finish",
   CANCEL = "cancel",
   INVALID = "invalid",
