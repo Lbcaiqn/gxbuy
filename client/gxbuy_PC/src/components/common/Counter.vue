@@ -29,7 +29,7 @@ watch(count, newVal => {
 
 <template>
   <div id="counter">
-    <div class="counter-btn" @click="count = count > 1 ? count - 1 : count">-</div>
+    <button class="counter-btn" @click="count = count > 1 ? count - 1 : count">-</button>
     <div>
       <input
         class="counter-inp"
@@ -39,28 +39,27 @@ watch(count, newVal => {
         @blur="count = !count || count > 999999999 ? 1 : count"
       />
     </div>
-    <div class="counter-btn" @click="count = count < 999999999 ? count + 1 : count">+</div>
+    <button class="counter-btn" @click="count = count < 999999999 ? count + 1 : count">+</button>
   </div>
 </template>
 
 <style lang="less" scoped>
 #counter {
   display: flex;
-  line-height: 40px;
+  align-items: center;
   text-align: center;
-
   .counter-inp {
-    border: 2px solid #fff;
     width: 80px;
     height: 40px;
+    line-height: 40px;
     text-align: center;
   }
 
   .counter-btn {
-    border: 2px solid #fff;
     width: 40px;
     height: 40px;
-    font-size: 30px;
+    line-height: 30px;
+    font-size: 25px;
     cursor: pointer;
   }
 }

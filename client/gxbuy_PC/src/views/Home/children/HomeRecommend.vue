@@ -24,7 +24,7 @@ getRecommendData();
       <div class="title">{{ i.name }}</div>
       <div class="content" @click="$router.push({ path: '/search', query: { keyword: i.keyword } })">
         <div>
-          <img :src="baseURL + i.img" />
+          <el-image style="width: 100%; height: 100%" :src="baseURL + i.img" lazy />
         </div>
         <div v-for="j in i.children" :key="j._id">
           <img :src="baseURL + j.img" @load="EventBus.emit('imgLoadFinish')" />
@@ -35,12 +35,14 @@ getRecommendData();
 </template>
 
 <style lang="less" scoped>
+@import '@/assets/style/variable.less';
+
 #home-recommend {
   margin-top: 50px;
   .title {
     margin-top: 20px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #000;
+    border-bottom: 2px solid @main-color;
     font-size: 20px;
   }
 

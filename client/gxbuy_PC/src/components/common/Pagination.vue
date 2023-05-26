@@ -93,7 +93,7 @@ const startAndEnd = computed(() => {
 
     &.active {
       cursor: not-allowed;
-      background-color: #409eff;
+      background-color: rgb(255, 0, 54);
       color: #fff;
     }
   }

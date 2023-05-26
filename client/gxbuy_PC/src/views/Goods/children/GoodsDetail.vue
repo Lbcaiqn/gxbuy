@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { formatDate } from '@/tools/formatDate';
 import GoodsList from '@/components/content/GoodsList.vue';
 import Pagination from '@/components/common/Pagination.vue';
 
@@ -7,21 +8,7 @@ const baseURL = ref(
   import.meta.env.MODE === 'development' ? import.meta.env.VITE_DEV_BASEURL : import.meta.env.VITE_PROD_BASEURL
 );
 
-// 控制切换商品详情和商品评论 ----------------------------------------------------
-const controll = ref<'img' | 'comment'>('img');
-const controllerRef = ref<HTMLElement | null>(null);
-let controllerRefOffsetTop = ref<number | undefined>(0);
-
-onMounted(() => {
-  controllerRefOffsetTop.value = controllerRef.value?.offsetTop! - controllerRef.value?.clientHeight!;
-});
-
-function changeControll(type: 'img' | 'comment') {
-  controll.value = type;
-  if (window.scrollY > controllerRefOffsetTop.value!) window.scrollTo({ top: controllerRefOffsetTop.value });
-}
-
-// PROPS 和 emit ------------------------------------------------------------------
+// Props 和 emit ------------------------------------------------------------------
 const props = withDefaults(
   defineProps<{
     parameter: any[];
@@ -37,6 +24,20 @@ const props = withDefaults(
   }
 );
 const emit = defineEmits(['currentPage']);
+
+// 控制切换商品详情和商品评论 ----------------------------------------------------
+const controll = ref<'img' | 'comment'>('img');
+const controllerRef = ref<HTMLElement | null>(null);
+const controllerRefOffsetTop = ref<number | undefined>(0);
+
+onMounted(() => {
+  controllerRefOffsetTop.value = controllerRef.value?.offsetTop! - controllerRef.value?.clientHeight!;
+});
+
+function changeControll(type: 'img' | 'comment') {
+  controll.value = type;
+  if (window.scrollY > controllerRefOffsetTop.value!) window.scrollTo({ top: controllerRefOffsetTop.value });
+}
 
 // 格式化sku销售属性 ------------------------------------------------------------------
 function skuSalesAttre(index: number) {
@@ -72,17 +73,33 @@ function currentPage(page: number) {
           </div>
         </div>
         <div class="img">
-          <img v-for="i in img" :src="i.goods_img_url" :key="i._id" />
+          <el-image
+            style="display: block; width: 100%"
+            v-for="(i, iIndex) in img"
+            :src="i.goods_img_url"
+            :key="i._id"
+            :zoom-rate="1.2"
+            :preview-src-list="img.map((item:any)=> item.goods_img_url)"
+            :initial-index="iIndex"
+            hide-on-click-modal
+            lazy
+          >
+            <template #error>
+              <span></span>
+            </template>
+          </el-image>
         </div>
       </div>
       <div class="goods-detail-content-comment" v-else-if="controll === 'comment' && JSON.stringify(comment) !== '{}'">
         <div class="comment-item" v-for="(i, iIndex) in comment.data">
           <div class="comment-title">
-            <div class="user-icon"><img :src="baseURL + i.user.user_icon" /></div>
+            <div class="user-icon">
+              <el-image :src="baseURL + i.user.user_icon" lazy />
+            </div>
             <div class="user-info">
               <div>{{ i.user.user_name }}</div>
               <div>
-                <div>{{ i.add_time }}</div>
+                <div>{{ formatDate(new Date(i.add_time), 'yyyy-0M-0d 0h:0m:0s') }}</div>
                 <div>{{ skuSalesAttre(iIndex) }}</div>
               </div>
             </div>
@@ -102,12 +119,14 @@ function currentPage(page: number) {
 
     <div class="goods-by-shop" v-if="goodsByShop.length !== 0">
       <div>本店推荐</div>
-      <GoodsList :goods="goodsByShop" />
+      <GoodsList :goods="[{ time: null, goods: goodsByShop }]" />
     </div>
   </div>
 </template>
 
 <style lang="less" scoped>
+@import '@/assets/style/variable.less';
+
 #goods-detail {
   margin-top: 50px;
   .goods-detail-controller {
@@ -118,7 +137,7 @@ function currentPage(page: number) {
     left: 0;
     height: 60px;
     background-color: #fff;
-    border-bottom: 2px solid #fff;
+    border-bottom: 2px solid @main-color;
 
     > div {
       margin: 10px 20px 0 20px;
@@ -130,8 +149,9 @@ function currentPage(page: number) {
     }
 
     .active {
-      color: red;
-      border-bottom: 2px solid red;
+      font-weight: bold;
+      color: @main-color;
+      border-bottom: 2px solid @main-color;
     }
   }
 
@@ -156,15 +176,6 @@ function currentPage(page: number) {
           }
         }
       }
-
-      .img {
-        width: 100%;
-
-        img {
-          display: block;
-          width: 100%;
-        }
-      }
     }
 
     .goods-detail-content-comment {
@@ -174,28 +185,29 @@ function currentPage(page: number) {
         .comment-title {
           display: flex;
           align-items: center;
-          height: 50px;
+          height: 40px;
 
           .user-icon {
             margin-left: 10px;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
 
-            img {
+            :deep(img) {
               width: 100%;
               height: 100%;
-              border-radius: 25px;
+              border-radius: 20px;
             }
           }
 
           .user-info {
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             margin-left: 10px;
 
             > div {
-              height: 25px;
-              line-height: 25px;
+              height: 20px;
+              line-height: 20px;
               font-size: 18px;
             }
 
@@ -212,6 +224,8 @@ function currentPage(page: number) {
 
         .comment-area {
           margin-top: 20px;
+          padding: 0 10px;
+          font-size: 18px;
         }
       }
     }
@@ -220,7 +234,9 @@ function currentPage(page: number) {
   .goods-by-shop {
     > div:first-child {
       margin: 40px 0 5px 0;
+      padding-bottom: 5px;
       font-size: 20px;
+      border-bottom: 2px solid @main-color;
     }
   }
 }

@@ -67,7 +67,7 @@ interface swiperPropsInterface {
   navigation?: boolean; // 前进后退按钮
   slidesPerView?: number; // 每页的图片数
   spaceBetween?: number; // 每页多个图片时，每个图片之间的间距
-  effect?: 'slide' | 'fade'; // 切换的动画效果
+  effect?: 'slide' | 'fade' | string; // 切换的动画效果
   speed?: number; // 切换时间
   useZoom?: boolean; // 是否使用放大镜
   thumbs?: boolean; // 是否使用缩略图
@@ -122,7 +122,7 @@ function initSwiper(swiperInstance: any, thumbs: boolean = false) {
       nextEl: '.swiper-button-next',
       prevEl: '.swiper-button-prev',
     },
-    effect: options?.effect,
+    effect: options?.effect as any,
     speed: options?.speed,
     slidesPerView: options?.slidesPerView,
     spaceBetween: options?.spaceBetween,
@@ -221,9 +221,6 @@ function mouseLeave(index: number) {
     <div class="swiper" ref="swiperRef">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="(i, iIndex) in img" :key="iIndex">
-          <!--  图片懒加载和swiper一起使用可能会出现一个bug 即渲染出空白图,下面是解决方案      -->
-          <!-- <img :src="carousel.imageUrl" v-if="index == 0 || index === carouselList.length - 1" /> -->
-          <!-- <img v-lazy.container="carousel.imageUrl" alt="" v-else /> -->
           <img
             ref="smallImgRef"
             :src="i"
@@ -231,6 +228,7 @@ function mouseLeave(index: number) {
             :data-img-index="iIndex"
             @mousemove="mouseMove($event, iIndex)"
           />
+
           <div
             v-if="useZoom"
             class="mask"

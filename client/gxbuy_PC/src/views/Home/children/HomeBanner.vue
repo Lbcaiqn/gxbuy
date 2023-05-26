@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, reactive, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
+import HomeProfile from './HomeProfile.vue';
+
 import MySwiper from '@/components/common/MySwiper.vue';
 import { getCategoryDataRequest, getBannerDataRequest } from '@/api';
 import { throttle } from '@/tools/lodash';
@@ -17,16 +19,12 @@ const homeData = reactive<any>({
   banner: [],
 });
 
-async function getCategoryData() {
+async function getHomeData() {
   homeData.category = (await getCategoryDataRequest()).data;
-}
-
-async function getBannerData() {
   homeData.banner = (await getBannerDataRequest()).data;
 }
 
-getCategoryData();
-getBannerData();
+getHomeData();
 
 // 切换分类
 const categoryCurrent = ref<number>(0);
@@ -85,21 +83,13 @@ function toSearch(e: MouseEvent) {
         "
         :banner-height="444"
         :loop="true"
-        :delay="3500"
+        :delay="5000"
         :navigation="true"
         :thumbs="true"
       />
     </div>
     <div class="right">
-      <div class="user-info">
-        <div class="user-img"><img src="/none/none_user.jpg" /></div>
-        <div class="user-name">Hi，欢迎！</div>
-      </div>
-      <div class="user-option">
-        <div class="user-option-btn">登录</div>
-        <div class="user-option-btn">注册</div>
-        <div class="user-option-btn">开店</div>
-      </div>
+      <HomeProfile />
     </div>
     <div
       class="detail"
@@ -124,9 +114,9 @@ function toSearch(e: MouseEvent) {
 
 <style lang="less" scoped>
 #home-banner {
-  border: 1px solid #fff;
   display: flex;
   position: relative;
+  margin-top: 20px;
   height: 444px;
   .left {
     overflow: scroll;
@@ -135,7 +125,7 @@ function toSearch(e: MouseEvent) {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 5px;
+      padding: 3px;
       margin-left: 5px;
       width: 100%;
       font-size: 17px;
@@ -155,51 +145,6 @@ function toSearch(e: MouseEvent) {
   }
   .right {
     width: 25%;
-
-    .user-info {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      margin-top: 80px;
-      width: 100%;
-      height: 40%;
-      .user-img {
-        width: 100px;
-        height: 100px;
-
-        img {
-          width: 100%;
-          border-radius: 50px;
-          border: 2px solid #000;
-        }
-      }
-
-      .user-name {
-        margin-top: 40px;
-        font-size: 25px;
-      }
-    }
-
-    .user-option {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 40%;
-
-      .user-option-btn {
-        margin: 0 8px;
-        width: 70px;
-        height: 35px;
-        line-height: 35px;
-        text-align: center;
-        font-size: 20px;
-        cursor: pointer;
-        border: 2px solid #000;
-        border-radius: 10px;
-      }
-    }
   }
   .detail {
     display: none;
@@ -208,8 +153,7 @@ function toSearch(e: MouseEvent) {
     left: 15%;
     width: 60%;
     z-index: 999;
-    background-color: #000;
-    color: #fff;
+    background-color: #fff;
 
     .two {
       display: flex;

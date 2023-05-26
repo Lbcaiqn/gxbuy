@@ -26,9 +26,11 @@ getFloorData();
 </template>
 
 <style lang="less" scoped>
+@import '@/assets/style/variable.less';
+
 #pc-footer {
   margin-top: 50px;
-  border-top: 2px solid #000;
+  border-top: 2px solid @main-color;
   .pc-center {
     display: flex;
     justify-content: space-between;

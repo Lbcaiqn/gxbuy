@@ -1,5 +1,6 @@
 export function debunce(fn: Function, delay: number = 1000) {
   let t: NodeJS.Timeout | null = null;
+
   return function (...args: any[]) {
     if (t != null) clearTimeout(t);
     t = setTimeout(() => {

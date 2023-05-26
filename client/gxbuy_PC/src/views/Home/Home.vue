@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" name="home">
 import HomeBanner from './children/HomeBanner.vue';
 import HomeRecommend from './children/HomeRecommend.vue';
 import HomeFeature from './children/HomeFeature.vue';

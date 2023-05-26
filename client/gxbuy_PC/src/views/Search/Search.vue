@@ -1,12 +1,14 @@
-<script setup lang="ts">
+<script setup lang="ts" name="search">
 import { ref, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { getSearchRequest } from '@/api';
+import { myMessage } from '@/tools/message';
 import GoodsList from '@/components/content/GoodsList.vue';
 import Pagination from '@/components/common/Pagination.vue';
 
 const route = useRoute();
 
+// 初始化数据--------------------------------------------------------------
 const current = ref<number>(1);
 const goods = reactive<any>({
   goodsList: {},
@@ -20,14 +22,18 @@ async function getSearchData(options: {
   pageSize?: number;
   page?: number;
 }) {
-  const a = (await getSearchRequest(options)).data;
-  goods.goodsList = a;
+  try {
+    goods.goodsList = (await getSearchRequest(options)).data;
+  } catch (err: any) {
+    myMessage('网络异常', 'error');
+  }
 }
 getSearchData(route.query);
 
-function currentPage(page: number) {
+// 分页-------------------------------------------------------------------------
+async function currentPage(page: number) {
   current.value = page;
-  getSearchData({ ...route.query, page });
+  await getSearchData({ ...route.query, page });
   window.scrollTo({ top: 0 });
 }
 </script>
@@ -35,7 +41,7 @@ function currentPage(page: number) {
 <template>
   <div id="search">
     <div class="pc-center">
-      <GoodsList :goods="goods.goodsList.data" />
+      <GoodsList :goods="[{ time: null, goods: goods.goodsList.data }]" :showShopInfo="true" />
       <Pagination
         class="pagination"
         :total="Number(goods.goodsList.total)"

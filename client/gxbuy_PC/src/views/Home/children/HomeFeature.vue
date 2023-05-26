@@ -69,12 +69,14 @@ onBeforeUnmount(() => {
       <div :class="{ active: current == 'pop' }" @click="changeControll('pop')">流行</div>
     </div>
     <div class="goods-list">
-      <GoodsList :goods="homeData.feature[current]" :showShopInfo="true" />
+      <GoodsList :goods="[{ time: null, goods: homeData.feature[current] }]" :showShopInfo="true" />
     </div>
   </div>
 </template>
 
 <style lang="less" scoped>
+@import '@/assets/style/variable.less';
+
 #home-feature {
   margin-top: 40px;
 
@@ -86,13 +88,13 @@ onBeforeUnmount(() => {
     top: 90px;
     z-index: 9998;
     height: 60px;
-    background-color: #000;
-    border-bottom: 2px solid #000;
+    background-color: #fff;
+    border-bottom: 2px solid @main-color;
 
     > div {
       margin: 0 100px 0 100px;
       width: 150px;
-      height: 30px;
+      height: 35px;
       line-height: 30px;
       text-align: center;
       font-size: 22px;
@@ -100,8 +102,9 @@ onBeforeUnmount(() => {
     }
 
     .active {
-      color: red;
-      border-bottom: 2px solid red;
+      font-weight: bold;
+      color: @main-color;
+      border-bottom: 2px solid @main-color;
     }
   }
 }

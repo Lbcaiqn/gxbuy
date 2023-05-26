@@ -5,7 +5,13 @@ import PCFooter from './components/content/PCFooter.vue';
 
 <template>
   <PCHeader />
-  <router-view />
+
+  <router-view v-slot:default="{ Component }">
+    <keep-alive :include="['home']">
+      <component :is="Component"></component>
+    </keep-alive>
+  </router-view>
+
   <PCFooter />
 </template>
 
