@@ -1,18 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, ManyToMany, JoinColumn, JoinTable } from 'typeorm';
 import { Shop } from './shop.entity';
 import { ShopManagerRole } from './shop_manager_role.entity';
-import * as bcrypt from 'bcryptjs';
 
 @Entity()
 export class ShopManager {
-  async hashPassword(password: string) {
-    this.shop_manager_password = await bcrypt.hash(password, 10);
-  }
-
-  async comparePassword(password: string) {
-    return await bcrypt.compare(password, this.shop_manager_password);
-  }
-
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   _id: string;
 

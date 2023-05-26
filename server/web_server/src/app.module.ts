@@ -6,8 +6,8 @@ import { ShopcartModule } from './modules/shopcart/shopcart.module';
 import { CategoryModule } from './modules/category/category.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ShopModule } from './modules/shop/shop.module';
-import { AaaModule } from './modules/aaa/aaa/aaa.module';
 import { OrderModule } from './modules/order/order.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -16,6 +16,8 @@ import { OrderModule } from './modules/order/order.module';
     HomeModule,
     ShopcartModule,
     CategoryModule,
+    ShopModule,
+    OrderModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       username: 'root',
@@ -28,9 +30,7 @@ import { OrderModule } from './modules/order/order.module';
       retryAttempts: 10,
       autoLoadEntities: true,
     }),
-    ShopModule,
-    AaaModule,
-    OrderModule,
+    ScheduleModule.forRoot(),
   ],
 })
 export class AppModule {}

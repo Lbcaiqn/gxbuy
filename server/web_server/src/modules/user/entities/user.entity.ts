@@ -6,18 +6,9 @@ import { UserBrowseHistory } from './user_browse_history.entity';
 import { UserFollow } from './user_follow.entity';
 import { OrderInformation } from '@/modules/order/entities/order_information.entity';
 import { OrderItem } from '@/modules/order/entities/order_item.entity';
-import * as bcrypt from 'bcryptjs';
 
 @Entity()
 export class User {
-  async hashPassword(password: string) {
-    this.user_password = await bcrypt.hash(password, 10);
-  }
-
-  async comparePassword(password: string) {
-    return await bcrypt.compare(password, this.user_password);
-  }
-
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   _id: string;
 
@@ -32,6 +23,33 @@ export class User {
 
   @Column({ type: 'varchar', length: 250, nullable: false })
   user_icon: string;
+
+  @Column({ type: 'int', unsigned: true, nullable: false, default: 0 })
+  shopcart_total_all: number;
+
+  @Column({ type: 'int', unsigned: true, nullable: false, default: 0 })
+  order_total_all: number;
+
+  @Column({ type: 'int', unsigned: true, nullable: false, default: 0 })
+  order_total_wait_paid: number;
+
+  @Column({ type: 'int', unsigned: true, nullable: false, default: 0 })
+  order_total_wait_shipped: number;
+
+  @Column({ type: 'int', unsigned: true, nullable: false, default: 0 })
+  order_total_wait_receive: number;
+
+  @Column({ type: 'int', unsigned: true, nullable: false, default: 0 })
+  order_total_wait_comment: number;
+
+  @Column({ type: 'int', unsigned: true, nullable: false, default: 0 })
+  order_total_finish: number;
+
+  @Column({ type: 'int', unsigned: true, nullable: false, default: 0 })
+  order_total_cancel: number;
+
+  @Column({ type: 'int', unsigned: true, nullable: false, default: 0 })
+  order_total_invalid: number;
 
   @Column({
     type: 'timestamp',

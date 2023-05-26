@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { HomeBanner } from './entities/home_banner.entity';
 import { HomeRecommend } from './entities/home_recommend.entity';
 import { HomeFloor } from './entities/home_floor.entity';
-import { relative } from 'path';
 
 @Injectable()
 export class HomeService {

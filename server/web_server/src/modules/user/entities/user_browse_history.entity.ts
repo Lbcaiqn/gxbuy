@@ -18,7 +18,7 @@ export class UserBrowseHistory {
   user_id: string;
 
   @Column({ type: 'bigint', unsigned: true, nullable: true })
-  shop_spu_id: string;
+  goods_spu_id: string;
 
   @Index()
   @ManyToOne(() => User, { createForeignKeyConstraints: false })

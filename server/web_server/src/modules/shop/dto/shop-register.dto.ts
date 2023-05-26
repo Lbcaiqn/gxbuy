@@ -41,4 +41,9 @@ export class ShopRegisterDto {
   @Matches(/^.{2,30}$/, { message: '2到30个字符' })
   @ApiProperty({ type: String, example: 'lgx' })
   shop_manager_name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({ type: String, example: 'AK47' })
+  code: string;
 }

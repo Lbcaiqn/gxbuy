@@ -21,7 +21,7 @@ export class ShopController {
 
   @Post('/register')
   @ApiOperation({ summary: '商家注册', description: '商家注册' })
-  register(@Body(ValidatePipe) registerInfo: ShopRegisterDto) {
-    return this.shopService.register(registerInfo);
+  register(@Req() req, @Body(ValidatePipe) registerInfo: ShopRegisterDto) {
+    return this.shopService.register(req.session.code, registerInfo);
   }
 }

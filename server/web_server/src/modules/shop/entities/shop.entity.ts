@@ -6,18 +6,9 @@ import { ShopManager } from './shop_manager.entity';
 import { ShopManagerRole } from './shop_manager_role.entity';
 import { UserFollow } from '@/modules/user/entities/user_follow.entity';
 import { OrderItem } from '@/modules/order/entities/order_item.entity';
-import * as bcrypt from 'bcryptjs';
 
 @Entity()
 export class Shop {
-  async hashPassword(password: string) {
-    this.shop_password = await bcrypt.hash(password, 10);
-  }
-
-  async comparePassword(password: string) {
-    return await bcrypt.compare(password, this.shop_password);
-  }
-
   @PrimaryGeneratedColumn({ type: 'bigint', unsigned: true })
   _id: string;
 

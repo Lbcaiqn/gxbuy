@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 import { Repository } from 'typeorm';
@@ -8,8 +9,9 @@ import { ShopManagerRole } from './entities/shop_manager_role.entity';
 import { ShopRegisterDto } from './dto/shop-register.dto';
 import { User } from '../user/entities/user.entity';
 import { UserFollow } from '../user/entities/user_follow.entity';
-import { varify } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 import { SECRCT } from '@/common/secrct';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class ShopService {
@@ -23,37 +25,44 @@ export class ShopService {
 
   async getShopInfo(req: Request, id: string) {
     const data = await this.shopRepository.findOne({
-      relations: ['goods_spu'],
       where: { _id: id },
     });
 
-    if (!data) return '商家不存在';
+    if (!data) throw new HttpException('商家不存在', HttpStatus.BAD_REQUEST);
 
     const resData = { ...data, isFollow: false };
 
     //如果是目前是登录状态，就查看是否关注了商家
     let user_id: string | null = null;
     try {
-      user_id = varify(req.headers.authorization, SECRCT).user_id;
+      user_id = (verify(req.headers.authorization, SECRCT) as any)._id;
     } catch (err) {
       user_id = null;
     }
-    if (!user_id) {
+
+    if (user_id) {
       const user = await this.userRepository.findOne({ where: { _id: user_id } });
-      if (!user) {
+      if (user) {
         const userFollow = await this.userFollowRepository
           .createQueryBuilder('user_follow')
-          .where('user_id = :id', { id: user_id })
-          .andWhere('shop_id = :id', { id: resData._id })
+          .where('user_id = :uid', { uid: user_id })
+          .andWhere('shop_id = :sid', { sid: resData._id })
           .getOne();
+
         if (userFollow) resData.isFollow = true;
       }
     }
 
-    return data;
+    return resData;
   }
 
-  async register(registerInfo: ShopRegisterDto) {
+  async register(code: string, registerInfo: ShopRegisterDto) {
+    if (code !== registerInfo.code) throw new HttpException('验证码错误错误', HttpStatus.BAD_REQUEST);
+
+    if (await this.shopRepository.findOne({ where: { shop_account: registerInfo.shop_account } })) {
+      throw new HttpException('账号已存在', HttpStatus.BAD_REQUEST);
+    }
+
     const shop = new Shop();
     const shopManager = new ShopManager();
     const shopManagerRole = new ShopManagerRole();
@@ -61,24 +70,40 @@ export class ShopService {
     shop.shop_logo = '';
     shop.shop_name = registerInfo.shop_name;
     shop.shop_account = registerInfo.shop_account;
-    await shop.hashPassword(registerInfo.shop_password);
+    shop.shop_password = await bcrypt.hash(registerInfo.shop_password, 10);
+    shop.shop_manager = [];
+    shop.shop_manager_role = [];
+
+    let newShop: Shop | null = null;
     try {
-      await this.shopRepository.save(shop);
-    } catch (er) {
-      return '用户名已存在';
+      newShop = await this.shopRepository.save(shop);
+    } catch (err) {
+      throw new HttpException('店铺名已存在', HttpStatus.BAD_REQUEST);
     }
 
-    // shopManager.shop_manager_name = registerInfo.shop_manager_name;
-    // shopManager.shop_manager_account = registerInfo.shop_manager_account;
-    // await shopManager.hashPassword(registerInfo.shop_manager_password);
-    // shopManager.shop = shop;
-    // await this.shopManagerRepository.save(shopManager);
+    shopManager.shop_manager_name = registerInfo.shop_manager_name;
+    shopManager.shop_manager_account = registerInfo.shop_manager_account;
+    shopManager.shop_manager_password = await bcrypt.hash(registerInfo.shop_manager_password, 10);
+    shopManager.shop = shop;
+    await this.shopManagerRepository.save(shopManager);
 
-    // shopManagerRole.shop_manager_role_name = 'admin';
-    // shopManagerRole.shop = shop;
-    // shopManagerRole.shop_manager.push(shopManager);
-    // await this.shopManagerRoleRepository.save(shopManagerRole);
+    shopManagerRole.shop_manager_role_name = 'admin';
+    shopManagerRole.shop = shop;
+    await this.shopManagerRoleRepository.save(shopManagerRole);
 
-    return '注册成功';
+    const jwt = sign(
+      {
+        _id: newShop._id,
+      },
+      SECRCT
+    );
+
+    delete newShop.shop_password;
+
+    return {
+      message: '注册成功',
+      jwt,
+      newShop,
+    };
   }
 }

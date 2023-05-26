@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 import { Repository, Like } from 'typeorm';
@@ -9,7 +10,7 @@ import { UserFollow } from '../user/entities/user_follow.entity';
 import { UserBrowseHistory } from '../user/entities/user_browse_history.entity';
 import { UserSearchHistory } from '../user/entities/user_search_history.entity';
 import { OrderItem } from '../order/entities/order_item.entity';
-import { varify } from 'jsonwebtoken';
+import { verify } from 'jsonwebtoken';
 import { SECRCT } from '@/common/secrct';
 
 @Injectable()
@@ -44,13 +45,14 @@ export class GoodsService {
     // 如果目前是登录状态，就异步保存搜索记录
     let user_id: string | null = null;
     try {
-      user_id = varify(req.headers.authorization, SECRCT).user_id;
+      user_id = (verify(req.headers.authorization, SECRCT) as any)._id;
     } catch (err) {
       user_id = null;
     }
+
     if (user_id && keyword) {
       this.userRepository.findOne({ where: { _id: user_id } }).then(user => {
-        if (!user) {
+        if (user) {
           const userSearchHistory = new UserSearchHistory();
           userSearchHistory.keyword = keyword;
           userSearchHistory.user = user;
@@ -73,30 +75,32 @@ export class GoodsService {
       relations: ['shop', 'goods_sku', 'goods_img', 'goods_attribute', 'goods_attribute.attribute'],
     });
 
-    if (!data) return '商品不存在';
+    if (!data) throw new HttpException('商品不存在', HttpStatus.BAD_REQUEST);
 
     const resData = { ...data, isFavorite: false, isFollow: false };
 
     // 如果目前是登录状态，就查看是否是收藏的商品和关注的商家，并异步保存浏览记录
     let user_id: string | null = null;
     try {
-      user_id = varify(req.headers.authorization, SECRCT).user_id;
+      user_id = (verify(req.headers.authorization, SECRCT) as any)._id;
     } catch (err) {
       user_id = null;
     }
     if (user_id) {
       const user = await this.userRepository.findOne({ where: { _id: user_id } });
-      if (!user) {
+      if (user) {
         const userFavorite = await this.userFavoriteRepository
           .createQueryBuilder('user_favorite')
-          .where('user_id = :id', { id: user_id })
-          .andWhere('goods_spu_id = :id', { id: resData._id })
+          .where('user_id = :uid', { uid: user_id })
+          .andWhere('goods_spu_id = :gid', { gid: resData._id })
           .getOne();
+
         const userFollow = await this.userFollowRepository
           .createQueryBuilder('user_follow')
-          .where('user_id = :id', { id: user_id })
-          .andWhere('shop_id = :id', { id: resData.shop._id })
+          .where('user_id = :uid', { uid: user_id })
+          .andWhere('shop_id = :sid', { sid: resData.shop._id })
           .getOne();
+
         if (userFavorite) resData.isFavorite = true;
         if (userFollow) resData.isFollow = true;
 
@@ -131,14 +135,17 @@ export class GoodsService {
   async getGoodsByShop(id: string, req: Request) {
     const { pageSize, page } = req.query as any;
 
-    const data = await this.goodsSpuRepository.find({
+    const data = await this.goodsSpuRepository.findAndCount({
       relations: ['shop'],
       where: { shop_id: id },
       skip: (page - 1) * pageSize || 0,
       take: pageSize || 30,
     });
 
-    return data;
+    return {
+      total: data[1],
+      data: data[0],
+    };
   }
 
   async getGoodsComment(id: string, req: Request) {

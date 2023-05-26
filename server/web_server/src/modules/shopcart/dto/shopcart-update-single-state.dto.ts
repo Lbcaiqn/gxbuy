@@ -1,17 +1,21 @@
-import { IsNotEmpty, IsString, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsNumber, IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger/dist';
 
 enum CommandType {
-  Add = 'add',
-  Reduce = 'reduce',
-  Selected = 'selected',
+  QUANTITY = 'quantity',
+  SELECTED = 'selected',
 }
 
 export class ShopcartUpdateSingleStateDto {
   @IsNotEmpty()
   @IsEnum(CommandType)
-  @ApiProperty({ type: String, example: 'add' })
+  @ApiProperty({ type: String, example: 'quantity' })
   command: CommandType;
+
+  @IsOptional()
+  @IsNumber()
+  @ApiProperty({ type: Number, example: 1 })
+  quantity?: number;
 
   @IsNotEmpty()
   @IsString()

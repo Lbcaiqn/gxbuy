@@ -1,21 +1,24 @@
-import { IsNotEmpty, IsString, IsEnum } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsBoolean, IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger/dist';
 
 enum CommandType {
-  Selected = 'selected',
-  Cancel = 'cancel',
-  ShopSelected = 'shop-selected',
-  ShopCancel = 'shop-cancel',
+  ALL = 'all',
+  SHOP = 'shop',
 }
 
 export class ShopcartUpdateAllSelectedDto {
   @IsNotEmpty()
   @IsEnum(CommandType)
-  @ApiProperty({ type: String, example: 'selected' })
+  @ApiProperty({ type: String, example: 'all' })
   command: CommandType;
 
   @IsNotEmpty()
+  @IsBoolean()
+  @ApiProperty({ type: Boolean, example: true })
+  selectedOrCancel: boolean;
+
+  @IsOptional()
   @IsString()
   @ApiProperty({ type: String, example: '' })
-  shop_id: string;
+  shop_id?: string;
 }

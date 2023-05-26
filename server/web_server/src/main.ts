@@ -6,6 +6,8 @@ import * as cors from 'cors';
 import { NestExpressApplication } from '@nestjs/platform-express/interfaces';
 import { join } from 'path';
 import * as session from 'express-session';
+import { ResponseInterceptor } from './common/response-interceptor';
+import { HttpFilter } from './common/http-filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -31,7 +33,7 @@ async function bootstrap() {
     session({
       secret: 'asjlfhuig4145646g5sr4g65',
       rolling: true, //true每次请求后设置session会重新计时session过期时间
-      name: 'cookiename', //session的name
+      name: 'gxbuy_PC', //session的name
       cookie: {
         maxAge: 3 * 60 * 1000, //过期时间，单位毫秒，如果是负数或null则是一次性的
       },
@@ -47,6 +49,12 @@ async function bootstrap() {
     .build();
   const docs = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/api-docs', app, docs);
+
+  // 响应拦截器
+  app.useGlobalInterceptors(new ResponseInterceptor());
+
+  // 异常过滤器
+  app.useGlobalFilters(new HttpFilter());
 
   // 端口
   await app.listen(3000);
