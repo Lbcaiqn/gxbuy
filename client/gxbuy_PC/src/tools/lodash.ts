@@ -1,22 +1,23 @@
 export function debunce(fn: Function, delay: number = 1000) {
   let t: NodeJS.Timeout | null = null;
-  return function () {
-    if (t != null) clearTimeout(t)
+
+  return function (...args: any[]) {
+    if (t != null) clearTimeout(t);
     t = setTimeout(() => {
-      fn();
-    }, delay)
-  }
+      fn(...args);
+    }, delay);
+  };
 }
 
-export function throttle(fn: Function,delay: number = 1000){
+export function throttle(fn: Function, delay: number = 1000) {
   let flag: boolean = true;
-  return function(...rest: any[]){
-    if(flag){
+  return function (...args: any[]) {
+    if (flag) {
       setTimeout(() => {
-        fn(...rest);
+        fn(...args);
         flag = true;
-      },delay);
+      }, delay);
       flag = false;
     }
-  }
+  };
 }

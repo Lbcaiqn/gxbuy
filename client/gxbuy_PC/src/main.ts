@@ -1,21 +1,8 @@
-import { createApp } from 'vue'
-import './style.css'
-import "@/mock/mockServer"
-import router from '@/router/index'
-import {pinia} from '@/store/index'
-import App from './App.vue'
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from '@/router';
+import pinia from '@/store';
+import 'normalize.css';
+import '@/assets/style/global.less';
 
-createApp(App).use(router).use(pinia).mount('#app')
-
-
-import axios from 'axios'
-
-
-
-
-
-
-
-
-
-
+createApp(App).use(router).use(pinia).mount('#app');

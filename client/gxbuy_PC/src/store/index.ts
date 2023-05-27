@@ -1,32 +1,30 @@
-import {createPinia,defineStore} from 'pinia'
-const pinia = createPinia()
+import { createPinia, defineStore } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 
-const MainStore = defineStore('Main',{
-  state(){
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
+
+export const MainStore = defineStore('MainStore', {
+  state() {
+    return {};
+  },
+  getters: {},
+  actions: {},
+});
+
+export const UserStore = defineStore('UserStore', {
+  state() {
     return {
-      user: {
-        nickName: ''
-      }
-    }
+      gxbuy_PC_jwt: '',
+      userInfo: {} as any,
+    };
   },
-  getters: {
-    //功能类似于计算属性，也有缓存
-    //通过this可调用state，getters
-    // phoneNumberHide(){
-      // return this.phoneNumber.toString().replace(/^(\d{3})\d{4}(\d{4})$/,'$1****$2')
-      // 使用ts时，ts无法根据return自动判断类型，所以需要自行设置返回类型，如 xxx
-    // }  
+  persist: {
+    key: 'gxbuy_PC_user_store',
+    storage: window.localStorage,
   },
-  actions: {
-    //可定义同步/异步函数
-    // xxx(){
-      //通过this调用store自己的state，actions，getters
-      // this.aaa += 10
-    // }  
-  }
-})
+  getters: {},
+  actions: {},
+});
 
-export {
-  pinia,
-  MainStore
-}
+export default pinia;
