@@ -106,8 +106,7 @@ async function deleteSearchHistoryAll() {
         </div>
         <div class="left" v-else>
           <span>欢迎来到聚享购！ {{ userStore.userInfo.user_name }}</span>
-          <span>个人中心</span>
-          <span>我的订单</span>
+          <span @click="$router.push('/order' + 'all')">个人中心</span>
           <span @click="$router.push('/shopcart')">我的购物车</span>
         </div>
         <div class="right" v-if="userStore.gxbuy_PC_jwt">
