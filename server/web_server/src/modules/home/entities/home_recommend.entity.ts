@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Index, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
 export class HomeRecommend {
@@ -14,6 +14,7 @@ export class HomeRecommend {
   @Column({ type: 'varchar', length: 250, nullable: false })
   img: string;
 
+  @Index()
   @Column({ type: 'tinyint', unsigned: true, nullable: true })
   pid: number;
 

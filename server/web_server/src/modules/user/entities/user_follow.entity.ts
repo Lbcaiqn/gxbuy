@@ -14,18 +14,18 @@ export class UserFollow {
   })
   add_time: Date;
 
+  @Index()
   @Column({ type: 'bigint', unsigned: true, nullable: true })
   user_id: string;
 
+  @Index()
   @Column({ type: 'bigint', unsigned: true, nullable: true })
   shop_id: string;
 
-  @Index()
   @ManyToOne(() => User, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Index()
   @ManyToOne(() => Shop, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'shop_id' })
   shop: Shop;

@@ -23,10 +23,10 @@ export class ShopManager {
   })
   add_time: Date;
 
+  @Index()
   @Column({ type: 'bigint', unsigned: true, nullable: true })
   shop_id: string;
 
-  @Index()
   @ManyToOne(() => Shop, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'shop_id' })
   shop: Shop;

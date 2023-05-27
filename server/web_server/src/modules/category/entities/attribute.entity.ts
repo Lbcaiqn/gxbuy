@@ -20,34 +20,34 @@ export class Attribute {
   })
   add_time: Date;
 
+  @Index()
   @Column({ type: 'smallint', unsigned: true, nullable: true })
   cid: number;
 
+  @Index()
   @Column({ type: 'smallint', unsigned: true, nullable: true })
   c1id: number;
 
+  @Index()
   @Column({ type: 'smallint', unsigned: true, nullable: true })
   c2id: number;
 
+  @Index()
   @Column({ type: 'smallint', unsigned: true, nullable: true })
   c3id: number;
 
-  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'cid' })
   cid_msg: Category;
 
-  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'c1id' })
   c1id_msg: Category;
 
-  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'c2id' })
   c2id_msg: Category;
 
-  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'c3id' })
   c3id_msg: Category;

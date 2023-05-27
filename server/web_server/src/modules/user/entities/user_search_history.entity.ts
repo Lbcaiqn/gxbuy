@@ -16,10 +16,10 @@ export class UserSearchHistory {
   })
   add_time: Date;
 
+  @Index()
   @Column({ type: 'bigint', unsigned: true, nullable: true })
   user_id: string;
 
-  @Index()
   @ManyToOne(() => User, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'user_id' })
   user: User;

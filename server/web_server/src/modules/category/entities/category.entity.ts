@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Attribute } from './attribute.entity';
 import { GoodsSpu } from '@/modules/goods/entities/goods_spu.entity';
 import { GoodsSku } from '@/modules/goods/entities/goods_sku.entity';
@@ -24,6 +24,7 @@ export class Category {
   })
   add_time: Date;
 
+  @Index()
   @Column({ type: 'smallint', unsigned: true, nullable: true })
   cat_pid: number;
 

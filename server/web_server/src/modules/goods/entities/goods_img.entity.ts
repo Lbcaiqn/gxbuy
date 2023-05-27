@@ -35,10 +35,10 @@ export class GoodsImg {
   })
   add_time: Date;
 
+  @Index()
   @Column({ type: 'bigint', unsigned: true, nullable: true })
   goods_spu_id: string;
 
-  @Index()
   @ManyToOne(() => GoodsSpu, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'goods_spu_id' })
   goods_spu: GoodsSpu;

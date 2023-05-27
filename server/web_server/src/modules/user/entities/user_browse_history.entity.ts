@@ -14,18 +14,18 @@ export class UserBrowseHistory {
   })
   add_time: Date;
 
+  @Index()
   @Column({ type: 'bigint', unsigned: true, nullable: true })
   user_id: string;
 
+  @Index()
   @Column({ type: 'bigint', unsigned: true, nullable: true })
   goods_spu_id: string;
 
-  @Index()
   @ManyToOne(() => User, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Index()
   @ManyToOne(() => GoodsSpu, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'goods_spu_id' })
   goods_spu: GoodsSpu;

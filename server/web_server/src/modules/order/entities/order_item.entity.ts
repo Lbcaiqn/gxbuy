@@ -51,42 +51,42 @@ export class OrderItem {
   })
   update_time: Date;
 
+  @Index()
   @Column({ type: 'bigint', unsigned: true, nullable: true })
   order_information_id: string;
 
+  @Index()
   @Column({ type: 'bigint', unsigned: true, nullable: true })
   user_id: string;
 
+  @Index()
   @Column({ type: 'bigint', unsigned: true, nullable: true })
   shop_id: string;
 
+  @Index()
   @Column({ type: 'bigint', unsigned: true, nullable: true })
   goods_spu_id: string;
 
+  @Index()
   @Column({ type: 'bigint', unsigned: true, nullable: true })
   goods_sku_id: string;
 
-  @Index()
   @ManyToOne(() => OrderInformation, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'order_information_id' })
   order_information: OrderInformation;
 
-  @Index()
   @ManyToOne(() => User, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Index()
   @ManyToOne(() => Shop, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'shop_id' })
   shop: Shop;
 
-  @Index()
   @ManyToOne(() => GoodsSpu, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'goods_spu_id' })
   goods_spu: GoodsSpu;
 
-  @Index()
   @ManyToOne(() => GoodsSku, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'goods_sku_id' })
   goods_sku: GoodsSku;

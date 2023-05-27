@@ -47,42 +47,42 @@ export class GoodsSpu {
   })
   add_time: Date;
 
+  @Index()
   @Column({ type: 'smallint', unsigned: true, nullable: true })
   cid: number;
 
+  @Index()
   @Column({ type: 'smallint', unsigned: true, nullable: true })
   c1id: number;
 
+  @Index()
   @Column({ type: 'smallint', unsigned: true, nullable: true })
   c2id: number;
 
+  @Index()
   @Column({ type: 'smallint', unsigned: true, nullable: true })
   c3id: number;
 
+  @Index()
   @Column({ type: 'bigint', unsigned: true, nullable: true })
   shop_id: string;
 
-  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'cid' })
   cid_msg: Category;
 
-  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'c1id' })
   c1id_msg: Category;
 
-  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'c2id' })
   c2id_msg: Category;
 
-  @Index()
   @ManyToOne(() => Category, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'c3id' })
   c3id_msg: Category;
 
-  @Index()
   @ManyToOne(() => Shop, { createForeignKeyConstraints: false })
   @JoinColumn({ name: 'shop_id' })
   shop: Shop;
