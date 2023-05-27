@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, Index } from "typeorm";
 
 @Entity()
 export class Category {
@@ -14,6 +14,7 @@ export class Category {
   @Column({ type: "varchar", length: 250, nullable: true })
   cat_icon: string;
 
+  @Index()
   @Column({ type: "smallint", unsigned: true, nullable: true })
   cat_pid: number;
 
